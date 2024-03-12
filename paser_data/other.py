@@ -3,13 +3,13 @@ import pandas as pd
 from datetime import datetime
 import json
 
-from trans.machine01 import Machine01
-from trans.machine02 import Machine02
-from trans.machine03 import Machine03
+from paser_data.machine01 import Machine01
+from paser_data.machine02 import Machine02
+from paser_data.machine03 import Machine03
 
 # file_path = r'C:\Users\squir\Desktop\杨导开发任务\赤麻鸭-剑湖-5只-湖南1.csv'
-# file_path = r'C:\Users\squir\Desktop\杨导开发任务\赤麻鸭9978.csv'
-file_path = r'C:\Users\squir\Desktop\杨导开发任务\kiz账户5只个体.csv'
+file_path = r'C:\Users\squir\Desktop\杨导开发任务\赤麻鸭9978.csv'
+# file_path = r'C:\Users\squir\Desktop\杨导开发任务\kiz账户5只个体.csv'
 
 
 fileHead_class_dict = {"['X.U.FEFF.终端', 'IMEID', '时间', '东西', '经度', '南北', '纬度', '速度', '航向', '高度', '温度', '电压', '运动量', '卫星', 'HDOP', 'VDOP', '精度', '有效性']":1,

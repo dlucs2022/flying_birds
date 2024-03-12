@@ -1,5 +1,5 @@
 # ID:1211-赤麻鸭雄鸟剑湖20210123
-from trans.device import Device
+from paser_data.device import Device
 import re
 from datetime import datetime
 
