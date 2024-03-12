@@ -1,5 +1,5 @@
 #设备名： 赤麻鸭04（雌）·KIZ122·剑湖·20220223
-from trans.device import Device
+from paser_data.device import Device
 import re
 from datetime import datetime
 

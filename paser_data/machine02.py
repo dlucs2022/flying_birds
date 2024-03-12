@@ -1,5 +1,5 @@
 #赤麻鸭9978 efeb37b5945d
-from trans.device import Device
+from paser_data.device import Device
 from datetime import datetime
 
 class Machine02(Device):
