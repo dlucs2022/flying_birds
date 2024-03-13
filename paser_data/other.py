@@ -8,7 +8,7 @@ from paser_data.machine02 import Machine02
 from paser_data.machine03 import Machine03
 
 # file_path = r'C:\Users\squir\Desktop\杨导开发任务\赤麻鸭-剑湖-5只-湖南1.csv'
-file_path = r'C:\Users\squir\Desktop\杨导开发任务\赤麻鸭9978.csv'
+file_path = r'../kiz账户5只个体.csv'
 # file_path = r'C:\Users\squir\Desktop\杨导开发任务\kiz账户5只个体.csv'
 
 
@@ -108,4 +108,3 @@ def get_data_json(file_path):
     return data_list
 
 
-print(get_data_json(file_path))
