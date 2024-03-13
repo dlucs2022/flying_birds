@@ -1,5 +1,7 @@
 import csv
 from sqlalchemy import Column, String, Integer, BigInteger, Date, ForeignKey, func, DateTime, Text, Time
+from sqlalchemy.orm import relationship
+
 from .database import Base
 import psycopg2
 
@@ -10,13 +12,13 @@ import psycopg2
 #  'Height', 'Speed', 'Azimuth', 'Temperature', 'Voltage', 'Communication Signal Level', 'X2D_3D', 'PDOP', 'HDOP', 'X-axis Angle', 'Y-axis Angle', 'Z-axis Angle']
 # ['id', 'device id', 'data format', 'longitude', 'latitude', 'north/south latitude', 'east/west longitude', 'date', 'time',
 # 'height', 'speed', 'azimuth', 'temperature', 'voltage', 'communication signal level', 'x2d_3d', 'pdop', 'hdop', 'x-axis angle', 'y-axis angle', 'z-axis angle']
-class Brid_data(Base):
-    '''
+class BirdCommon(Base):
+    """
 
     三个表共有字段
 
-    '''
-    __tablename__ = 'Brid_data'
+    """
+    __tablename__ = 'bird_common'
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     device_name = Column(String(100), nullable=True, comment='设备号')
     time = Column(String(100), nullable=True, comment='时间')
@@ -25,19 +27,33 @@ class Brid_data(Base):
     altitude = Column(String(100), nullable=True, comment='高度')
     longitude = Column(String(100), nullable=True, comment='温度')
     latitude = Column(String(100), nullable=True, comment='电压')
-    species = Column(String(100), nullable=True, comment='物种')
+    species_id = Column(Integer, ForeignKey('species_data.id'), comment='物种类别外键')
+    # species_id = ForeignKey(column="species_.id", comment="物种类别外键")
+    # 绑定
+    species = relationship(
+        "Species",
+        back_populates="data"
+    )
 
-    def __repr__(self):
-        return f'这是Brid_data_union'
+
+class Species(Base):
+    """
+    物种表
+    """
+    __tablename__ = 'species_data'  # noqa
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    species = Column(String(100))
+    data = relationship(
+        "BirdCommon",
+        back_populates="species"
+    )
 
 
-class Brid_data1(Base):
-    '''
-
-    单个表共有字段  第三个
-
-    '''
-    __tablename__ = 'Brid_data1'
+class BirdData1(Base):
+    """
+  单个表共有字段  第三个
+    """
+    __tablename__ = 'bird_data1'
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     x_id = Column(String(100), nullable=True, comment='编号')
     device_id = Column(String(100), nullable=True, comment='设备号')
@@ -64,16 +80,13 @@ class Brid_data1(Base):
 
     def __repr__(self):
         return f'这是Brid_data1'
-    
-    
-    
 
 
-class Brid_data2(Base):
+class BirdData2(Base):
     '''
     GPS 数据表
     '''
-    __tablename__ = 'Brid_data2'
+    __tablename__ = 'bird_data2'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     terminal_id = Column(String(100))
@@ -100,11 +113,11 @@ class Brid_data2(Base):
         return f'<GPSData(id={self.id}, terminal_id={self.terminal_id}, imei_id={self.imei_id}, timestamp={self.timestamp}, ...)>'
 
 
-class Brid_data3(Base):
+class BirdData3(Base):
     '''
     GPS 数据表
     '''
-    __tablename__ = 'Brid_data3'
+    __tablename__ = 'bird_data3'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     uuid = Column(String(100))
@@ -127,6 +140,11 @@ class Brid_data3(Base):
     vdop = Column(String(100))
     species = Column(String(100), nullable=True, comment='物种')
 
-
     def __repr__(self):
         return f'<GPSData(id={self.id}, uuid={self.uuid}, transmitting_time={self.transmitting_time}, ...)>'
+
+# if __name__ == '__main__':
+# # b = BirdCommon()
+# c = Species()
+# b.species = c
+# db.add(b)

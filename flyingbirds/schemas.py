@@ -16,31 +16,44 @@ from typing import List
 from fastapi import File, UploadFile
 
 
-class create_Brid_data(BaseModel):
+class CreateBirdData(BaseModel):
     '''
     三个表共有数据
     '''
-    device_name:str
-    time :date
+    device_name: str
+    time: date
     satellites: int
-    speed :str
-    altitude :str
-    longitude :str
-    latitude :str
-    species:str = 'default_species'
+    speed: str
+    altitude: str
+    longitude: str
+    latitude: str
+    species: str = 'default_species'
 
 
-
-class read_Brid_data(create_Brid_data):
+class ReadBirdData(CreateBirdData):
     '''
     三个表共有数据
     '''
+
     class Config:
         orm_model = True
 
 
+class CreateSpeciesData(BaseModel):
+    '''
+    三个表共有数据
+    '''
+
+    species: str = None
 
 
+class ReadSpeciesData(CreateSpeciesData):
+    '''
+    三个表共有数据
+    '''
+
+    class Config:
+        orm_model = True
 
 
 class CreateData(BaseModel):
@@ -69,7 +82,7 @@ class CreateData(BaseModel):
     x_axis_angle: str
     y_axis_angle: str
     z_axis_angle: str
-    species:str = 'default_species'
+    species: str = 'default_species'
 
 
 class ReadData(CreateData):
@@ -105,8 +118,7 @@ class CreateData1(BaseModel):
     vdop: str
     accuracy: str
     validity: str
-    species:str = 'default_species'
-
+    species: str = 'default_species'
 
 
 class ReadData1(CreateData1):
@@ -118,7 +130,6 @@ class ReadData1(CreateData1):
 
     class Config:
         orm_model = True
-
 
 
 class CreateData2(BaseModel):
@@ -143,8 +154,7 @@ class CreateData2(BaseModel):
     data_source: str
     hdop: str
     vdop: str
-    species:str = 'default_species'
-
+    species: str = 'default_species'
 
 
 class ReadData2(CreateData2):
@@ -160,4 +170,3 @@ class ReadData2(CreateData2):
 
 class FileUpload(BaseModel):
     files: List[UploadFile] = File(...)
-

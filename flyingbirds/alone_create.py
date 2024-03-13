@@ -1,8 +1,9 @@
 
 import csv
 import os.path
-from flyingbirds import crud, schemas
-from flyingbirds.schemas import CreateData ,CreateData1,CreateData2
+from flyingbirds import crud
+from flyingbirds.schemas import CreateData, CreateData1, CreateData2
+
 
 # 创建第一个单独文件夹kiz账户5只个体.csv
 def create_data1(file, db, species):
@@ -72,10 +73,6 @@ def create_data2(file, db, species):
     crud.create_data_fist3(db=db, data1=json_data, species1=species)
 
 
-
-
-
-
 # #第三个表格的导入数据库"['X.U.FEFF.终端', 'IMEID', '时间', '东西', '经度', '南北', '纬度', '速度', '航向', '高度', '温度', '电压', '运动量', '卫星', 'HDOP', 'VDOP', '精度', '有效性']":1,
 #                     "":2,
 # 创建第一个单独文件夹kiz账户5只个体.csv
@@ -108,4 +105,3 @@ def create_data3(file, db, species):
             row = CreateData1(**row_dict)
             json_data.append(row.dict())
     crud.create_data_fist2(db=db, data1=json_data, species1=species)
-
