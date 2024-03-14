@@ -1,1 +1,4 @@
-abc
+fastapi[all]
+sqlalchemy
+openpyxl
+pandas~=2.2.1
