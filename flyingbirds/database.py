@@ -9,8 +9,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# SQLALCHEMY_DATABASE_URL = 'sqlite:///./flying.brids'
-SQLALCHEMY_DATABASE_URL='postgresql://root:FlyingBirdsDB@188.100.4.237:23306/postgres'  #mysql
+SQLALCHEMY_DATABASE_URL = 'sqlite:///./flying.brids'
+# SQLALCHEMY_DATABASE_URL='postgresql://root:FlyingBirdsDB@188.100.4.237:23306/postgres'  #mysql
 
 engine = create_engine(
     # echo=True表示引擎将用repr()函数记录所有语句及其参数列表到日志
