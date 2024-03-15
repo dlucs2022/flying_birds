@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas
 
-from paser_data.env import csv_headers
+from parse_data.env import csv_headers
 
 
 class ParserBase(ABC):
@@ -154,5 +154,9 @@ class ParserBase(ABC):
         values = self.dataframe.iloc[item].values
         return dict(zip(keys, values))
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.dataframe)
+
+    def __iter__(self):
+        for index in range(len(self)):
+            yield self[index]

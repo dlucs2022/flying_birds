@@ -2,8 +2,8 @@ from datetime import datetime
 
 import pandas
 
-from paser_data.base import ParserBase
-from paser_data.tools import get_satellite_dim
+from parse_data.base import ParserBase
+from parse_data.tools import get_satellite_dim
 
 
 class Parser02(ParserBase):

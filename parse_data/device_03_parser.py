@@ -1,6 +1,6 @@
 import pandas
 
-from paser_data.base import ParserBase
+from parse_data.base import ParserBase
 from datetime import datetime
 
 
