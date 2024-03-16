@@ -1,6 +1,5 @@
 from uvicorn import run
 from fastapi import FastAPI
-from fastapi.routing import APIRouter
 
 from api.router.parser import parser_router
 
