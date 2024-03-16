@@ -7,6 +7,7 @@ from fastapi import Form, UploadFile, File, status, Query
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRouter
 
+from api.utils.save_data import save_data
 from database.database import SESSION_LOCAL
 from database.tables import BirdSpecies, BirdCommonData
 from model.model import BirdCommonData as BirdCommonDataModel
@@ -16,19 +17,11 @@ from config import CACHE_DIR
 
 parser_router = APIRouter()
 
-
-def get_unique_value(*args: list[str]):
-    args = list(map(str, args))
-    args = sorted(args)
-    unique = hashlib.md5("".join(args).encode()).hexdigest()
-    return unique
-
-
 @parser_router.post("/parser", summary="解析数据")
 async def parser_api(  # TODO: 解决数据重复问题
     files: List[UploadFile] = File(..., description="csv文件"),
     species: str = Form(..., description="鸟类种类"),
-    encoding: str = Form("gb2312", description="编码格式"),
+    encoding: str = Form("gb2312", description="编码格式:如果失败utf-8/gbk"),
 ):
     """
     # 解析数据
@@ -43,7 +36,14 @@ async def parser_api(  # TODO: 解决数据重复问题
             file_path = os.path.join(CACHE_DIR, file.filename)
             with open(file_path, "wb") as f:
                 f.write(file_data)
-            data = parse_common_data(file_path, encoding)
+
+          #判断编码类型，进行解析
+            try:
+                data = parse_common_data(file_path, encoding)
+            except UnicodeDecodeError:
+                # 如果在初始编码下解析时发生UnicodeDecodeError，尝试另一种编码
+                alternative_encoding = "utf-8"  # 使用备用编码重新尝试
+                data = parse_common_data(file_path, alternative_encoding)
 
             # 获取鸟类物种
             species_record = (
@@ -57,33 +57,7 @@ async def parser_api(  # TODO: 解决数据重复问题
                 session.refresh(species_record)
 
             # save data to database
-            objects = []
-            for index, item in enumerate(data):
-                item: dict
-                objects.append(
-                    BirdCommonData(
-                        device_name=str(item.get("device_name")),
-                        time=(
-                            datetime.strptime(item.get("time"), "%Y-%m-%d %H:%M:%S")
-                            if item.get("time")
-                            else None
-                        ),
-                        satellites=int(item.get("satellites")),
-                        speed=float(item.get("speed")),
-                        altitude=float(item.get("altitude")),
-                        longitude=float(item.get("longitude")),
-                        latitude=float(item.get("latitude")),
-                        species_id=species_record.id,
-                        unique=get_unique_value(*list(item.values())),
-                    )
-                )
-                if (index + 1) % 2000 == 0:
-                    session.bulk_save_objects(
-                        objects,
-                    )
-                    session.commit()
-                    objects = []
-            session.commit()
+            save_data(data, species_record, session)
 
         return JSONResponse(
             status_code=status.HTTP_200_OK, content={"code": 0, "message": "success"}
@@ -92,12 +66,13 @@ async def parser_api(  # TODO: 解决数据重复问题
 
 @parser_router.get("/data", summary="解析数据")
 async def get_data_api(
-    species: Optional[None] = Query(None, description="鸟类种类"),
+    species: Optional[str] = Query(None, description="鸟类种类"),
     page: int = Query(1, description="页码"),
     page_size: int = Query(10, description="每页数量"),
     order_by: str = Query("create_time", description="排序字段"),
     order: str = Query("desc", description="排序方式"),
 ):
+
     with SESSION_LOCAL() as session:
         query = session.query(BirdCommonData)
         if species:
